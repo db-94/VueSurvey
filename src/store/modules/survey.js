@@ -5,12 +5,15 @@ import router from '@/router';
 
 const state = {
   questions: [],
+  surveyId: null,
   authorized: false,
   password: '',
   answers: {},
   loading: false,
   authUrl: null,
   logoUrl: null,
+  submitUrl: null,
+  endMessage: null,
 };
 
 const mutations = {
@@ -31,6 +34,9 @@ const mutations = {
   },
   setAuthUrl: (state, authUrl) => {
     state.authUrl = authUrl;
+  },
+  setEndMessage: (state, endMessage) => {
+    state.endMessage = endMessage;
   },
 };
 
@@ -55,6 +61,16 @@ const actions = {
     if (!surveyInfo.auth) {
       dispatch('loadSurvey');
     }
+  },
+  submitSurvey: ({ commit, state }) => {
+    axios.post(state.submitUrl, {
+      answers: state.answers,
+      surveyId: state.surveyId,
+    }).then((response) => {
+      commit('setEndMessage', response.endMessage);
+    }).catch((error) => {
+
+    })
   },
 };
 
